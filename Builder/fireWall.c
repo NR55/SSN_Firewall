@@ -75,7 +75,7 @@ static unsigned int nf_blockipaddr_handler(void *priv, struct sk_buff *skb, cons
 
         char str[16];
         sprintf(str, "%u.%u.%u.%u", IPADDRESS(sip));
-        if (strncmp(str, ACCEPT_PREFIX, strlen(ACCEPT_PREFIX)) == 0 || strncmp(str, "127.0.0.53", strlen("127.0.0.53")) == 0)
+        if (strncmp(str, ACCEPT_PREFIX, strlen(ACCEPT_PREFIX)) == 0 || strncmp(str, "127.", strlen("127.")) == 0)
         {
             printk(KERN_ALERT "\xC2\xA7 \xC2\xB6 [%s] ACCEPT: %s\n", timestr, str);
             return NF_ACCEPT;
@@ -90,7 +90,8 @@ static unsigned int nf_blockipaddr_handler(void *priv, struct sk_buff *skb, cons
                 if (iph->protocol == IPPROTO_UDP)
                 {
                     udph = udp_hdr(sb);
-                    if (ntohs(udph->dest) == 53)
+//                    if (ntohs(udph->dest) == 53)
+                    if (ntohs(udph->source) == 53)
                     {
                         printk(KERN_ALERT "\xC2\xA7 \xC2\xB6 [%s] ACCEPT: DNS Request to port 53\n", timestr);
                         return NF_ACCEPT;
@@ -99,7 +100,8 @@ static unsigned int nf_blockipaddr_handler(void *priv, struct sk_buff *skb, cons
                 else if (iph->protocol == IPPROTO_TCP)
                 {
                     tcph = tcp_hdr(sb);
-                    if (ntohs(tcph->dest) == 53)
+//                    if (ntohs(tcph->dest) == 53)
+                    if (ntohs(tcph->source) == 53)
                     {
                         printk(KERN_ALERT "\xC2\xA7 \xC2\xB6 [%s] ACCEPT: DNS Request to port 53\n", timestr);
                         return NF_ACCEPT;
