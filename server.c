@@ -38,14 +38,15 @@ void *listen_messages(void *arg)
             char res[50];
             strcpy(res,"./runner.sh ");
             strcat(res, ser_ip);
+            strcat(res, "\n");
             broadcast(res);
         }
         else if (strncmp(buffer, "stop", strlen("stop"))==0)
-            broadcast("./stopper.sh");
+            broadcast("./stopper.sh\n");
         else if (strncmp(buffer, "stat", strlen("stat"))==0)
-            broadcast("./status.sh");
+            broadcast("./status.sh\n");
         else if (strncmp(buffer, "make", strlen("make"))==0)
-            broadcast("./maker.sh");
+            broadcast("./maker.sh\n");
         else
             broadcast(buffer);
     }
