@@ -1,2 +1,9 @@
 *.mod
 *.ko
+*.log
+*.out
+*.cmd
+*.mod.c
+*.o
+Module.*
+modules.order

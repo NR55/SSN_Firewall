@@ -11,4 +11,4 @@ if [ -f fireWall.ko ]; then
     rm -f fireWall.ko
 fi
 make
-cp fireWall.ko ../fireWall.ko
+cp fireWall.ko ../

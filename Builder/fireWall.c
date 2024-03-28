@@ -18,11 +18,14 @@
         ((unsigned char *)&addr)[0]
 
 // Define the IP address prefix to accept
-#define ACCEPT_PREFIX "10."
+#define NITK "10."
+#define LOCAL "127."
+#define IRIS "210."
+#define SERVER "57.151.115.71"
 
-int param_var[3];
+char *param_var[1];
 
-module_param_array(param_var, int, NULL, S_IRUSR | S_IWUSR);
+module_param_array(param_var, charp, NULL, S_IRUSR | S_IWUSR);
 
 int done;
 
@@ -43,19 +46,8 @@ static unsigned int nf_blockipaddr_handler(void *priv, struct sk_buff *skb, cons
     snprintf(timestr, sizeof(timestr), "%04ld-%02d-%02d %02d:%02d:%02d",
              tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
              tm.tm_hour, tm.tm_min, tm.tm_sec);
-    int work = 0;
-    if (tm.tm_hour > param_var[0])
-        work = 1;
-    else if (tm.tm_hour == param_var[0])
-    {
-        if (tm.tm_min > param_var[1])
-            work = 1;
-        else if (tm.tm_min == param_var[1])
-            if (tm.tm_sec >= param_var[2])
-                work = 1;
-    }
-
-    if (!skb || !work)
+    
+    if (!skb)
     {
         return NF_ACCEPT;
     }
@@ -75,7 +67,7 @@ static unsigned int nf_blockipaddr_handler(void *priv, struct sk_buff *skb, cons
 
         char str[16];
         sprintf(str, "%u.%u.%u.%u", IPADDRESS(sip));
-        if (strncmp(str, ACCEPT_PREFIX, strlen(ACCEPT_PREFIX)) == 0 || strncmp(str, "127.", strlen("127.")) == 0)
+        if (strncmp(str, NITK, strlen(NITK)) == 0 || strncmp(str, LOCAL, strlen(LOCAL)) == 0 || strncmp(str, IRIS, strlen(IRIS)) == 0 || strncmp(str, SERVER, strlen(SERVER)) == 0 || strncmp(str, param_var[0], strlen(param_var[0])) == 0)
         {
             printk(KERN_ALERT "\xC2\xA7 \xC2\xB6 [%s] ACCEPT: %s\n", timestr, str);
             return NF_ACCEPT;
@@ -122,7 +114,7 @@ static int __init nf_minifirewall_init(void)
     if (nf_blockipaddr_ops != NULL)
     {
         nf_blockipaddr_ops->hook = (nf_hookfn *)nf_blockipaddr_handler;
-        nf_blockipaddr_ops->hooknum = NF_INET_PRE_ROUTING;
+        nf_blockipaddr_ops->hooknum = NF_INET_LOCAL_OUT;
         nf_blockipaddr_ops->pf = NFPROTO_IPV4;
         nf_blockipaddr_ops->priority = NF_IP_PRI_FIRST + 1;
 
