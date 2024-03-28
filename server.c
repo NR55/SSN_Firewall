@@ -91,9 +91,9 @@ int main()
 
     // Print server IP and port
     printf("Server started. Listening on %s:%d\n", inet_ntoa(temp_addr.sin_addr), ntohs(temp_addr.sin_port));
-    system("ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' > samp.txt");
+    system("ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' > ssn_ip.txt");
 
-    FILE *fp = fopen("samp.txt", "r");
+    FILE *fp = fopen("ssn_ip.txt", "r");
     if (fp == NULL)
     {
         perror("Error opening file");
@@ -108,6 +108,8 @@ int main()
 
     // Close the file
     fclose(fp);
+
+    remove("ssn_ip.txt");
 
     // Listen for incoming connections
     if (listen(server_socket, 5) < 0)
