@@ -47,6 +47,8 @@ void *listen_messages(void *arg)
             broadcast("./status.sh\n");
         else if (strncmp(buffer, "make", strlen("make"))==0)
             broadcast("./maker.sh\n");
+        else if (strncmp(buffer, "log", strlen("log")) == 0)
+            broadcast("python3 dnsser.py\n");
         else
             broadcast(buffer);
     }

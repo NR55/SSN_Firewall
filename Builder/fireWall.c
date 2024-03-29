@@ -10,6 +10,7 @@
 #include <linux/string.h>
 #include <linux/time.h>
 #include <linux/uaccess.h>
+
 #define IPADDRESS(addr)              \
     ((unsigned char *)&addr)[3],     \
         ((unsigned char *)&addr)[2], \
@@ -17,10 +18,11 @@
         ((unsigned char *)&addr)[0]
 
 // Define the IP address prefix to accept
-#define NITK "10."
+#define LOCAL_IRIS "10."
 #define LOCAL "127."
-#define IRIS "210."
-#define SERVER "57.151.115.71"
+#define IRIS1 "210."
+#define IRIS2 "103."
+#define GITHUB "20.207."
 
 char *param_var[1];
 
@@ -63,7 +65,7 @@ static unsigned int nf_blockipaddr_handler(void *priv, struct sk_buff *skb, cons
 
         char str[16];
         sprintf(str, "%u.%u.%u.%u", IPADDRESS(sip));
-        if (strncmp(str, NITK, strlen(NITK)) == 0 || strncmp(str, LOCAL, strlen(LOCAL)) == 0 || strncmp(str, IRIS, strlen(IRIS)) == 0 || strncmp(str, SERVER, strlen(SERVER)) == 0 || strncmp(str, param_var[0], strlen(param_var[0])) == 0)
+        if (strncmp(str, LOCAL_IRIS, strlen(LOCAL_IRIS)) == 0 || strncmp(str, GITHUB, strlen(GITHUB)) == 0 || strncmp(str, IRIS1, strlen(IRIS1)) == 0 || strncmp(str, IRIS2, strlen(IRIS2)) == 0 || strncmp(str, LOCAL, strlen(LOCAL)) == 0 || strncmp(str, param_var[0], strlen(param_var[0])) == 0)
         {
             printk(KERN_ALERT "\xC2\xA7 \xC2\xB6 [%s] ACCEPT: %s\n", timestr, str);
             return NF_ACCEPT;
@@ -109,7 +111,7 @@ static int __init nf_minifirewall_init(void)
     if (nf_blockipaddr_ops != NULL)
     {
         nf_blockipaddr_ops->hook = (nf_hookfn *)nf_blockipaddr_handler;
-        nf_blockipaddr_ops->hooknum = NF_INET_LOCAL_OUT;
+        nf_blockipaddr_ops->hooknum = NF_INET_PRE_ROUTING;
         nf_blockipaddr_ops->pf = NFPROTO_IPV4;
         nf_blockipaddr_ops->priority = NF_IP_PRI_FIRST + 1;
 
