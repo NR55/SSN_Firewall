@@ -7,6 +7,11 @@
 - Implemented an interface for the administrators to **view logs** of the number of requests sent to each domain name.
 - Used **NetFilterHooks** to filter and drop all packets other than DNS server requests and some whitelisted IP addresses.
 
+## Requirements
+
+This firewall is made exclusively for Linux based systems/virtual systems. Make sure you have superuser permissions and you are connected to a IPv4 network (preferrably NITK Net).
+
+
 ## Setup and Run Instructions
 
 ### Setup
@@ -14,7 +19,7 @@
 1. Clone the repository.
 
 ```bash
-bash maker.sh
+git clone https://github.com/NR55/SSN_Firewall.git
 ```
 
 2. Enter the directory.
@@ -23,14 +28,13 @@ bash maker.sh
 cd SSN_Firewall
 ```
 
-3. Run the setup script.
+1. Run the setup script.
 
+```bash
+bash maker.sh
+```
+
+4. Start the program and customize your firewall using the below command.
 ```bash
 python3 daWorker.py
 ```
-
-### Running the Server
-
-To run the server, execute the necessary command.
-
-This will start the firewall with the specified configurations. Make sure you have the necessary permissions and dependencies installed.
